@@ -14,9 +14,8 @@ cloudinary.config({
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-
 const router = Router();
-router.post('/upload', authenticate, upload.single('file'), async (req: AuthRequest, res: Response): Promise<any> => {
+router.post('/', authenticate, upload.single('file'), async (req: AuthRequest, res: Response): Promise<any> => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
@@ -53,7 +52,8 @@ router.post('/upload', authenticate, upload.single('file'), async (req: AuthRequ
     res.status(500).json({ message: 'File upload failed', error });
   }
 });
-router.get('/upload', authenticate, async (req: AuthRequest, res: Response) => {
+
+router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {
     const connection = await db;
     const uploads = await connection
@@ -67,9 +67,8 @@ router.get('/upload', authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
-router.delete('/upload/:id', authenticate, async (req: AuthRequest, res: Response): Promise<any> => {
+router.delete('/:id', authenticate, async (req: AuthRequest, res: Response): Promise<any> => {
   const uploadId = Number(req.params.id);
-
   if (isNaN(uploadId)) {
     return res.status(400).json({ message: 'Invalid upload ID' });
   }
@@ -86,7 +85,6 @@ router.delete('/upload/:id', authenticate, async (req: AuthRequest, res: Respons
     await connection
       .delete(schema.uploads)
       .where(eq(schema.uploads.id, uploadId));
-
     res.json({ message: 'Upload deleted successfully' });
   } catch (error) {
     console.error('Delete error:', error);

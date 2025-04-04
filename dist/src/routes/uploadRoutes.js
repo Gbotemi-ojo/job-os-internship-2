@@ -51,7 +51,7 @@ cloudinary_1.v2.config({
 const storage = multer_1.default.memoryStorage();
 const upload = (0, multer_1.default)({ storage });
 const router = (0, express_1.Router)();
-router.post('/upload', authenticate_1.authenticate, upload.single('file'), async (req, res) => {
+router.post('/', authenticate_1.authenticate, upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
     }
@@ -86,7 +86,7 @@ router.post('/upload', authenticate_1.authenticate, upload.single('file'), async
         res.status(500).json({ message: 'File upload failed', error });
     }
 });
-router.get('/upload', authenticate_1.authenticate, async (req, res) => {
+router.get('/', authenticate_1.authenticate, async (req, res) => {
     try {
         const connection = await index_1.default;
         const uploads = await connection
@@ -100,7 +100,7 @@ router.get('/upload', authenticate_1.authenticate, async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch uploads', error });
     }
 });
-router.delete('/upload/:id', authenticate_1.authenticate, async (req, res) => {
+router.delete('/:id', authenticate_1.authenticate, async (req, res) => {
     const uploadId = Number(req.params.id);
     if (isNaN(uploadId)) {
         return res.status(400).json({ message: 'Invalid upload ID' });

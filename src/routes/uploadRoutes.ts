@@ -20,10 +20,13 @@ router.post('/', authenticate, upload.single('file'), async (req: AuthRequest, r
     return res.status(400).json({ message: 'No file uploaded' });
   }
   try {
-    const uploadFromBuffer = (buffer: Buffer): Promise<any> => {
+    const isDocx = req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const resourceType: "raw" | "auto" = isDocx ? "raw" : "auto";
+
+    const uploadFromBuffer = (buffer: Buffer, resourceType: "raw" | "auto"): Promise<any> => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { resource_type: 'auto' },
+          { resource_type: resourceType },
           (error, result) => {
             if (error) return reject(error);
             resolve(result);
@@ -32,12 +35,17 @@ router.post('/', authenticate, upload.single('file'), async (req: AuthRequest, r
         stream.end(buffer);
       });
     };
-    const result: any = await uploadFromBuffer(req.file.buffer);
+
+    const result: any = await uploadFromBuffer(req.file.buffer, resourceType);
     const connection = await db;
+    
+    // Truncate the MIME type string to 50 characters
+    const truncatedFileType = req.file.mimetype.slice(0, 50);
+
     await connection.insert(schema.uploads).values({
       userId: req.user!.id,
       fileUrl: result.secure_url,
-      fileType: req.file.mimetype,
+      fileType: truncatedFileType,
       fileName: req.file.originalname,
       publicId: result.public_id,
     });
@@ -52,6 +60,7 @@ router.post('/', authenticate, upload.single('file'), async (req: AuthRequest, r
     res.status(500).json({ message: 'File upload failed', error });
   }
 });
+
 
 router.get('/', authenticate, async (req: AuthRequest, res: Response) => {
   try {

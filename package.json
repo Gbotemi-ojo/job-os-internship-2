@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch",
+    "build": "tsc",
     "db:gen": "npx drizzle-kit generate",
     "db:mig": "npx drizzle-kit migrate",
     "studio": "npx drizzle-kit studio",
-    "start": "nodemon src/index.ts"
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",

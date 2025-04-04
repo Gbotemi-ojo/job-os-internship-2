@@ -3,7 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import cors from 'cors';
-import uploadRoutes from './routes/uploadRoutes';
+// import uploadRoutes from './routes/uploadRoutes';
 
 dotenv.config();
 
@@ -12,8 +12,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use('/', uploadRoutes);
+app.get('/', (_, res) => {
+  res.send('Hello World');
+});
+// app.use('/', uploadRoutes);
 app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;

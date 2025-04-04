@@ -3,17 +3,18 @@ import * as schema from "./schema";
 import pg, { Pool } from "pg";
 import "dotenv/config"
 const dbCredentials={
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : undefined,
-    database: process.env.DB_NAME,
-    dialect: process.env.DB_DIALECT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    ssl:process.env.DB_SSL=="true"?true:false,
-    Pool_mode : "session",
+    // host: process.env.DB_HOST,
+    // port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : undefined,
+    // database: process.env.DB_NAME,
+    // dialect: process.env.DB_DIALECT,
+    // user: process.env.DB_USER,
+    // password: process.env.DB_PASS,
+    // ssl:process.env.DB_SSL=="true"?true:false,
+    // Pool_mode : "session",
+    url : process.env.DB_URL,
 }
 
-const client = new pg.Client(dbCredentials)
+const client = new pg.Client(dbCredentials.url)
 
 async function connectAndInitialize() {
     await client.connect()

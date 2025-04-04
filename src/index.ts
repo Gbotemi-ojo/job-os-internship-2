@@ -1,7 +1,7 @@
 // index.ts
 import express from 'express';
 import dotenv from 'dotenv';
-// import authRoutes from './routes/authRoutes';
+import authRoutes from './routes/authRoutes';
 import cors from 'cors';
 // import uploadRoutes from './routes/uploadRoutes';
 
@@ -16,7 +16,7 @@ app.get('/', (_, res) => {
   res.send('Hello World');
 });
 // app.use('/', uploadRoutes);
-// app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
